@@ -1,0 +1,32 @@
+#game-field {
+  
+  width: 300px;
+}
+
+.class1 {
+  font-size: 2rem;
+  font-style: italic;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  color: aquamarine;
+}
+
+.class2 {
+  font-size: 0.5rem;
+  font-style: bold;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: rgb(20, 3, 97);
+}
+
+.class3 {
+  font-size: 2.5rem;
+  font-style: normal;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  color: rgb(87, 6, 22);
+}
+
+.class4 {
+  font-size: 1.5rem;
+  font-style: italic;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  color: rgb(82, 216, 19);
+}
