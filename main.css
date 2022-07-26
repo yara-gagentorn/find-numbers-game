@@ -3,6 +3,10 @@
   width: 300px;
 }
 
+body{
+  font-size: 20px;
+}
+
 .class1 {
   font-size: 2rem;
   font-style: italic;
