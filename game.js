@@ -32,32 +32,39 @@ const fontFamilies = [
 
 const fontStyles = ['normal', 'italic']
 
+const howManyNumbers = 10
+
 // random element from array
 function getRandomElement(array) {
   let randomEl = array[Math.floor(Math.random() * array.length)]
   return randomEl
 }
 
+// generate random color
 function randomColor(elem) {
-  // generate random color
   let someColor = Math.floor(Math.random() * 16777215).toString(16)
   elem.style.color = '#' + someColor
-  console.log(someColor)
 }
 
+// generate random font style and weight
 function randomStyleAndWeight(elem) {
   elem.style.fontStyle = getRandomElement(fontStyles)
   elem.style.fontWeight = Math.floor(Math.random() * 900)
 }
 
+// generate font
 function randomFont(elem) {
   elem.style.fontFamily = getRandomElement(fontFamilies)
-  console.log('font' + elem.style.fontFamily)
 }
 
+// generate font size
 function randomSize(elem) {
-  elem.style.fontSize = Math.floor(Math.random() * 5) + 'rem'
-  //console.log('size')
+  elem.style.fontSize = Math.floor(Math.random() * 6 + 2) + 'rem'
+}
+
+function randomAlign(elem) {
+  const alignOpt = ['baseline', 'top', 'middle', 'bottom']
+  elem.verticalAlign = getRandomElement(alignOpt)
 }
 
 // apply all styles
@@ -66,27 +73,65 @@ function assignStyle(elem) {
   randomFont(elem)
   randomSize(elem)
   randomStyleAndWeight(elem)
+  randomAlign(elem)
+}
+
+// create an array
+
+function getArray(firstNumber, lastNumber) {
+  let arr = []
+  for (let i = firstNumber; i <= lastNumber; i++) {
+    arr.push(i)
+  }
+  return arr
 }
 
 function generateGameField(howManyNumbers) {
-  for (let i = 0; i < howManyNumbers; i++) {
-    console.log('here')
-    let newSpan = document.createElement('span')
+  let arr = getArray(0, howManyNumbers)
+  console.log(arr)
+  let i = howManyNumbers
+  let randomNum
+  let newSpan
+  let randomEl
 
-    newSpan.innerHTML = i
-    //newSpan.classList.add('class' + i)
-    if (i % 10 === 0) {
-      document
-        .getElementById('game-field')
-        .appendChild(document.createElement('br'))
-    }
-    // add div inside game-container
+  while (i >= 0) {
+    i--
+    newSpan = document.createElement('span')
+    randomEl = getRandomElement(arr)
+    randomNum = parseInt(randomEl)
+    arr.splice(arr.indexOf(randomEl), 1)
+    console.log(arr)
+    newSpan.innerHTML = randomNum + ' '
+    newSpan.setAttribute('id', randomNum + 'n')
     assignStyle(newSpan)
-    newSpan.onclick = () => {
-      console.log(i)
+    //  onClick only on the first number - 0
+    if (randomNum === 0) {
+      newSpan.onclick = clickOnNumber
     }
     document.getElementById('game-field').appendChild(newSpan)
   }
 }
 
-generateGameField(100)
+generateGameField(howManyNumbers)
+
+function clickOnNumber(number) {
+  let clickedNumSpan = number.target
+  let nextSpanID
+  clickedNumSpan.classList.add('clicked-num')
+  clickedNumSpan.onclick = ''
+  nextSpanID = parseInt(clickedNumSpan.innerHTML) + 1 + 'n'
+  console.log(nextSpanID)
+  document.getElementById(nextSpanID).onclick = clickOnNumber
+  console.log(clickedNum)
+}
+
+function gameLogic() {
+  // click on numbers from 0 to
+}
+
+// shows the next number
+function showHint() {
+  // find the next element and animete it
+}
+
+//----- TIMER -------//

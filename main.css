@@ -1,36 +1,48 @@
+div {
+ border: 0px solid black;
+}
+
+span {
+  line-height: 3rem;
+  border: 0px solid;
+  /*word-wrap:normal;*/
+  margin-left: 0;
+  display:inline-block;
+  cursor: pointer;
+}
+
+.numberContainer {
+  width: fit-content;
+  block-size: fit-content;
+  color: red;
+  background-color: aquamarine;
+}
+
+#container {
+  text-align: center;
+
+}
+
 #game-field {
-  
-  width: 300px;
+  word-wrap:break-word;
+  padding-top: 3rem;
+  margin: auto;
+  width: 40vw;
+  height: 50vh;
+  border: 0px solid black;
 }
 
 body{
-  font-size: 20px;
+  font-size: 20pt;
 }
 
-.class1 {
-  font-size: 2rem;
-  font-style: italic;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  color: aquamarine;
+#info {
+  float: left;
 }
 
-.class2 {
-  font-size: 0.5rem;
-  font-style: bold;
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: rgb(20, 3, 97);
-}
 
-.class3 {
-  font-size: 2.5rem;
-  font-style: normal;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  color: rgb(87, 6, 22);
-}
+.clicked-num {
+  filter: drop-shadow(0 0 0.2rem #c7bcc2);
+  color: rgb(202, 202, 202) !important;
 
-.class4 {
-  font-size: 1.5rem;
-  font-style: italic;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  color: rgb(82, 216, 19);
 }
