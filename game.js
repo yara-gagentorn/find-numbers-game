@@ -1,4 +1,4 @@
-//--- FONTS ---//
+//--- FONTS AND STYLES---//
 
 const fontFamilies = [
   "'Abril Fatface', cursive",
@@ -81,7 +81,7 @@ function assignStyle(elem) {
   randomAlign(elem)
 }
 
-// create an array
+// create an array of numbers
 function getArray(firstNumber, lastNumber) {
   let arr = []
   for (let i = firstNumber; i <= lastNumber; i++) {
@@ -116,7 +116,7 @@ function generateGameField(howManyNumbers) {
       newDiv.style.border = '2px solid'
       newDiv.style.margin = '-2px -1px -2px -1px'
     }
-    //  onClick only for the first number is 1
+    //  onClick function only for the first number is 1
     if (randomNum === 1) {
       newDiv.onclick = clickOnNumber
     }
@@ -173,7 +173,7 @@ function clickOnNumber(number) {
     document.getElementById('input-how-many-numbers').value
   ) {
     finishTimeSec = gtm / 1000
-    recordTheBest(howManyNumbers, finishTimeSec)
+    recordTheBest(finishTimeSec)
     showWin(finishTimeSec)
     clearInterval(gameTime)
     return
@@ -207,23 +207,43 @@ document.getElementById('hint-btn').onclick = showHint
 
 //----- RECORDS -----//
 function recordTheBest(finishTimeSec) {
-  let oldRecord = localStorage.getItem(`bestRecordfor${howManyNumbers}`)
-  console.log(oldRecord)
-  console.log(
-    'how many numbers',
-    document.getElementById('input-how-many-numbers').value
+  let oldRecord = JSON.parse(
+    localStorage.getItem(`bestRecordfor${howManyNumbers}`)
   )
   let newResult = {
-    'how-many-numbers': howManyNumbers,
-    'time-in-seconds': finishTimeSec,
+    howManyNumbers: howManyNumbers,
+    timeInSeconds: finishTimeSec,
   }
-  localStorage.setItem(
-    `bestRecordfor${howManyNumbers}`,
-    JSON.stringify(newResult)
-  )
-  console.log(localStorage.getItem('bestRecord'))
-  // get data for how many numbers and compare time
+
+  if (oldRecord) {
+    if (oldRecord.timeInSeconds > newResult.timeInSeconds) {
+      localStorage.setItem(
+        `bestRecordfor${howManyNumbers}`,
+        JSON.stringify(newResult)
+      )
+      document.getElementById('new-record').innerHTML = 'It is a new record!'
+    }
+  } else {
+    localStorage.setItem(
+      `bestRecordfor${howManyNumbers}`,
+      JSON.stringify(newResult)
+    )
+  }
 }
+
+// show record for the current number
+
+function showRecord() {
+  let oldRecord = JSON.parse(
+    localStorage.getItem(`bestRecordfor${howManyNumbers}`)
+  )
+  if (oldRecord) {
+    let result = `Best time for ${howManyNumbers} is ${oldRecord.timeInSeconds}`
+    document.getElementById('records').innerHTML = result
+  }
+}
+
+showRecord()
 
 //reset the best results
 // document.getElementById('reset-best').onclick = () => {
@@ -308,6 +328,7 @@ function startOver() {
   if (document.getElementById('game-field').style.filter) {
     hideWin()
   }
+  showRecord()
 }
 
 // new game after win
