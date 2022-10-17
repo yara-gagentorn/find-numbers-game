@@ -1,15 +1,4 @@
-// You need to find all numbers from 1 to n in order (first 1, then 2...)
-
-// generate n divs, each div contains number
-// font size, colors, font-styles are random (a few options for classes)
-// on click number become gray and unclickable
-
-// generate divs or spans with numbers
-
-// need to generate different styles for each number
-// parameters: color (any, not too white), size (0.5 rem to 5rem), syle (bold,italic,), font-family
-
-// generate a new span
+//--- FONTS ---//
 
 const fontFamilies = [
   "'Abril Fatface', cursive",
@@ -32,7 +21,10 @@ const fontFamilies = [
 
 const fontStyles = ['normal', 'italic']
 
-const howManyNumbers = 10
+let howManyNumbers = document.getElementById('input-how-many-numbers').value
+generateGameField(howManyNumbers)
+
+let finishTimeSec = 0
 
 // random element from array
 function getRandomElement(array) {
@@ -52,14 +44,14 @@ function randomStyleAndWeight(elem) {
   elem.style.fontWeight = Math.floor(Math.random() * 900)
 }
 
-// generate font
+// select random font from the list
 function randomFont(elem) {
   elem.style.fontFamily = getRandomElement(fontFamilies)
 }
 
 // generate font size
 function randomSize(elem) {
-  elem.style.fontSize = Math.floor(Math.random() * 6 + 2) + 'rem'
+  elem.style.fontSize = Math.floor(Math.random() * 4 + 4) + 'rem'
 }
 
 function randomAlign(elem) {
@@ -67,8 +59,21 @@ function randomAlign(elem) {
   elem.verticalAlign = getRandomElement(alignOpt)
 }
 
+function randomMargin(elem) {
+  const marg = -Math.floor(Math.random() * 15)
+  elem.style.marginTop = `${marg}px`
+}
+
+function randomRotate(elem) {
+  //angle between -30deg and 30deg
+  let angle = Math.floor(Math.random() * 30)
+  angle *= Math.round(Math.random()) ? 1 : -1
+  elem.style.transform = `rotate(${angle}deg)`
+}
+
 // apply all styles
 function assignStyle(elem) {
+  randomMargin(elem)
   randomColor(elem)
   randomFont(elem)
   randomSize(elem)
@@ -77,7 +82,6 @@ function assignStyle(elem) {
 }
 
 // create an array
-
 function getArray(firstNumber, lastNumber) {
   let arr = []
   for (let i = firstNumber; i <= lastNumber; i++) {
@@ -86,52 +90,249 @@ function getArray(firstNumber, lastNumber) {
   return arr
 }
 
+//----- GAME FIELD ----//
+
 function generateGameField(howManyNumbers) {
-  let arr = getArray(0, howManyNumbers)
-  console.log(arr)
+  document.getElementById('game-field').innerHTML = ''
+  let arr = getArray(1, howManyNumbers)
   let i = howManyNumbers
   let randomNum
-  let newSpan
+  let newDiv
   let randomEl
 
-  while (i >= 0) {
+  while (i > 0) {
     i--
-    newSpan = document.createElement('span')
+    newDiv = document.createElement('div')
     randomEl = getRandomElement(arr)
     randomNum = parseInt(randomEl)
     arr.splice(arr.indexOf(randomEl), 1)
-    console.log(arr)
-    newSpan.innerHTML = randomNum + ' '
-    newSpan.setAttribute('id', randomNum + 'n')
-    assignStyle(newSpan)
-    //  onClick only on the first number - 0
-    if (randomNum === 0) {
-      newSpan.onclick = clickOnNumber
+    newDiv.innerHTML = randomNum + ' '
+    newDiv.setAttribute('id', randomNum + 'n')
+    newDiv.setAttribute('class', 'num-div')
+    assignStyle(newDiv)
+    // check border, rotate and shake boxes
+    document.getElementById('is-rotate').checked ? randomRotate(newDiv) : ''
+    if (document.getElementById('is-border').checked) {
+      newDiv.style.border = '2px solid'
+      newDiv.style.margin = '-2px -1px -2px -1px'
     }
-    document.getElementById('game-field').appendChild(newSpan)
+    //  onClick only for the first number is 1
+    if (randomNum === 1) {
+      newDiv.onclick = clickOnNumber
+    }
+    document.getElementById('game-field').appendChild(newDiv)
+    if (document.getElementById('is-shaking').checked) {
+      shakeIt()
+    }
   }
 }
 
-generateGameField(howManyNumbers)
+//------ SHAKE IT BABY -------//
 
-function clickOnNumber(number) {
-  let clickedNumSpan = number.target
-  let nextSpanID
-  clickedNumSpan.classList.add('clicked-num')
-  clickedNumSpan.onclick = ''
-  nextSpanID = parseInt(clickedNumSpan.innerHTML) + 1 + 'n'
-  console.log(nextSpanID)
-  document.getElementById(nextSpanID).onclick = clickOnNumber
-  console.log(clickedNum)
-}
-
-function gameLogic() {
-  // click on numbers from 0 to
-}
-
-// shows the next number
-function showHint() {
-  // find the next element and animete it
+function shakeIt() {
+  let randomTime = function () {
+    return Math.random() * 2 + 0.3
+  }
+  let randomAngle = function () {
+    let angle = Math.floor(Math.random() * 30)
+    angle *= Math.round(Math.random()) ? 1 : -1
+    return angle
+  }
+  Array.from(document.getElementsByClassName('num-div')).map((div) => {
+    div.style.animation = `shakeNoRotate ${randomTime()}s infinite`
+    div.style.setProperty('--rotation', `rotate(${randomAngle()}deg)`)
+  })
 }
 
 //----- TIMER -------//
+
+let gameTime
+let gtm = 0
+
+function startGameTimer() {
+  gameTime = setInterval(() => {
+    gtm += 1000
+    document.getElementById('timer-span').innerHTML = gtm / 1000
+  }, 1000)
+}
+
+let nextDivID
+
+function clickOnNumber(number) {
+  let clickedNumDiv = number.target
+
+  if (parseInt(clickedNumDiv.innerHTML) === 1) {
+    startGameTimer()
+    document.getElementById('input-how-many-numbers').disabled = true
+  }
+
+  clickedNumDiv.classList.add('clicked-num')
+  clickedNumDiv.onclick = ''
+  if (
+    parseInt(clickedNumDiv.innerHTML) ==
+    document.getElementById('input-how-many-numbers').value
+  ) {
+    finishTimeSec = gtm / 1000
+    recordTheBest(howManyNumbers, finishTimeSec)
+    showWin(finishTimeSec)
+    clearInterval(gameTime)
+    return
+  }
+
+  nextDivID = parseInt(clickedNumDiv.innerHTML) + 1 + 'n'
+  document.getElementById('click-next-spn').innerHTML =
+    parseInt(clickedNumDiv.innerHTML) + 1
+  document.getElementById(nextDivID).onclick = clickOnNumber
+}
+
+// show the next number as a hint
+function showHint() {
+  if (nextDivID === undefined) {
+    document.getElementById('1n').classList.add('pop')
+    const deleteClass = setTimeout(
+      () => document.getElementById('1n').classList.remove('pop'),
+      2000
+    )
+  } else {
+    document.getElementById(nextDivID).classList.add('pop')
+    const deleteClass = setTimeout(
+      () => document.getElementById(nextDivID).classList.remove('pop'),
+      2000
+    )
+    gtm += 5000 // add 5 sec to a timer when use hint
+  }
+}
+
+document.getElementById('hint-btn').onclick = showHint
+
+//----- RECORDS -----//
+function recordTheBest(finishTimeSec) {
+  let oldRecord = localStorage.getItem(`bestRecordfor${howManyNumbers}`)
+  console.log(oldRecord)
+  console.log(
+    'how many numbers',
+    document.getElementById('input-how-many-numbers').value
+  )
+  let newResult = {
+    'how-many-numbers': howManyNumbers,
+    'time-in-seconds': finishTimeSec,
+  }
+  localStorage.setItem(
+    `bestRecordfor${howManyNumbers}`,
+    JSON.stringify(newResult)
+  )
+  console.log(localStorage.getItem('bestRecord'))
+  // get data for how many numbers and compare time
+}
+
+//reset the best results
+// document.getElementById('reset-best').onclick = () => {
+//   localStorage.setItem('seconds', 0)
+//   localStorage.setItem('how-many-numbers', 0)
+//   document.getElementById('best-time').innerHTML =
+//     'Your best time for ' +
+//     localStorage.getItem('how-many-numbers') +
+//     'is ' +
+//     localStorage.getItem('seconds') +
+//     'seconds'
+// }
+
+//--- ADDITIONAL OPTIONS ---//
+
+// if tick rotate - add style
+document.getElementById('is-rotate').onclick = toggleRotation
+
+function toggleRotation() {
+  if (document.getElementById('is-rotate').checked) {
+    Array.from(document.getElementsByClassName('num-div')).map((div) =>
+      randomRotate(div)
+    )
+  } else {
+    Array.from(document.getElementsByClassName('num-div')).map(
+      (div) => (div.style.transform = null)
+    )
+  }
+}
+
+// if tick borders - add border
+document.getElementById('is-border').onclick = toggleBorders
+
+function toggleBorders() {
+  if (document.getElementById('is-border').checked) {
+    Array.from(document.getElementsByClassName('num-div')).map((div) => {
+      div.style.border = '2px solid'
+      div.style.margin = '-2px -1px -2px -1px'
+    })
+  } else {
+    Array.from(document.getElementsByClassName('num-div')).map((div) => {
+      div.style.border = null
+      div.style.margin = null
+    })
+  }
+}
+
+// if tick shake it
+document.getElementById('is-shaking').onclick = toggleShake
+
+function toggleShake() {
+  if (document.getElementById('is-shaking').checked) {
+    shakeIt()
+  } else {
+    Array.from(document.getElementsByClassName('num-div')).map((div) => {
+      div.style.animation = ''
+    })
+  }
+}
+
+// how many numbers
+document.getElementById('input-how-many-numbers').onchange = handleHowMany
+
+function handleHowMany() {
+  document.getElementById('how-many-numbers').innerHTML =
+    document.getElementById('input-how-many-numbers').value
+  howManyNumbers = document.getElementById('input-how-many-numbers').value
+  generateGameField(howManyNumbers)
+}
+
+//--- START NEW GAME ---//
+
+document.getElementById('start-over').onclick = startOver
+
+function startOver() {
+  gtm = 0
+  document.getElementById('timer-span').innerHTML = '0'
+  document.getElementById('click-next-spn').innerHTML = '1'
+  clearInterval(gameTime)
+  generateGameField(document.getElementById('input-how-many-numbers').value)
+  document.getElementById('input-how-many-numbers').disabled = false
+  if (document.getElementById('game-field').style.filter) {
+    hideWin()
+  }
+}
+
+// new game after win
+
+//--- WIN ---//
+
+function handleClick(event) {
+  if (event.target === document.querySelector('#game-field')) {
+    hideWin()
+  }
+}
+
+function showWin(finishTimeSec) {
+  document.getElementById('game-field').style.filter = 'blur(5px)'
+  document.getElementById('win-window').style.visibility = 'visible'
+  document.getElementById('win-window').style.animation = 'winPopUp 1s'
+  document.getElementById('win-seconds').innerHTML = finishTimeSec
+  document.getElementById('win-start-over').onclick = startOver
+  document.addEventListener('click', handleClick)
+}
+
+function hideWin() {
+  document.getElementById('game-field').style.filter = ''
+  document.getElementById('win-window').style.visibility = 'hidden'
+  document.getElementById('win-window').style.animation = ''
+  document.removeEventListener('click', handleClick)
+  startOver()
+}
