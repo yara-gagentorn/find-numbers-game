@@ -17,28 +17,27 @@
   <div id="container">
     <h1 id="game-name">Number Seek</h1>
     <div id="rules"><div id="click-hext-div">Click on <span id ="click-next-spn">1</span></div></div>
-      <div id="info">
-        
-        <div id="timer-div">Timer: <span id="timer-span">0</span> sec</div>
-        <div id="hint-div"><button id="hint-btn">Show me a hint</button>
-          <div><span id="hint-descr">Every hint will add 5 sec to your time</span></div>
-        </div>
-        <div id="best-time">Your best time: <span id="best-time"></span></div>
-        <!-- <div><button id="reset-best">Reset</button></div> -->
-        <div><input type="checkbox" id="is-rotate" name="is-rotate" checked>Rotate</div>
-        <div><input type="checkbox" id="is-border" name="is-border">Border</div>
-        <div><input type="checkbox" id="is-shaking" name="is-shaking" checked>Shake it!</div>
-        <div><input id="input-how-many-numbers" type="range" min="1" max="80" value="15"><span id="how-many-numbers">15</span>
-        </div>
-        <div><button id="start-over">Start Over</button></div>
-        <div id="records"></div>
-        <button id="reset-records"> Reset Records</button>
+    <div id="info">
+      <div id="timer-div">Timer: <span id="timer-span">0</span> sec</div>
+      <div id="hint-div"><button id="hint-btn">Show me a hint</button>
+        <div><span id="hint-descr">Every hint will add 5 sec to your time</span></div>
       </div>
+      <div id="best-time">Your best time: <span id="best-time"></span></div>
+      <div><input type="checkbox" id="is-rotate" name="is-rotate" checked>Rotate</div>
+      <div><input type="checkbox" id="is-border" name="is-border">Border</div>
+      <div><input type="checkbox" id="is-shaking" name="is-shaking" checked>Shake it!</div>
+      <div>
+        <input id="input-how-many-numbers" type="range" min="1" max="80" value="15"><span id="how-many-numbers">15</span>
+      </div>
+      <div><button id="start-over">Start Over</button></div>
+      <div id="records"></div>
+      <button id="reset-records"> Reset Records</button>
+    </div>
     <div id="win-window">Congrats! Your result is <span id="win-seconds"></span> seconds <br>
       <span id="new-record"></span><br>
       <button id="win-start-over">Play Again</button>
     </div>
-      <div id="game-field"> </div>
+    <div id="game-field"> </div>
      
   </div>  
   <script src="/game.js"></script>

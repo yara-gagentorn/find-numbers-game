@@ -102,3 +102,19 @@ body{
       transform: scale(1);
     }
 }
+
+@media screen and (max-width: 531px) {
+
+
+
+  #container { display: flex; flex-flow: column; }
+  #rules { order: 2; }
+  #game-field { order: 1; 
+    width: 90vw;
+    height: auto; 
+  padding-top: 0px;
+padding-bottom: 1rem;}
+  #info { order: 3; }
+  .two { order: 4; }
+  .one { order: 5 }
+}

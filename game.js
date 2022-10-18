@@ -257,26 +257,27 @@ function recordTheBest(finishTimeSec) {
 // show record for the current number
 
 function showRecord() {
+  document.getElementById('reset-records').style.visibility = 'hidden'
   let oldRecord = JSON.parse(
     localStorage.getItem(`bestRecordfor${howManyNumbers}`)
   )
   if (oldRecord) {
     let result = `Best time for ${howManyNumbers} is ${oldRecord.timeInSeconds}`
     document.getElementById('records').innerHTML = result
-    document.getElementById('reset-records').visibility = 'visible'
+    document.getElementById('reset-records').style.visibility = 'visible'
   } else {
-    document.getElementById('reset-records').visibility = 'hidden'
+    document.getElementById('reset-records').style.visibility = 'hidden'
   }
 }
 
 showRecord()
 
-//document.getElementById('reset-records').visibility = 'hidden'
 document.getElementById('reset-records').onclick = resetRecords
 
 function resetRecords() {
   localStorage.clear()
   document.getElementById('records').innerHTML = ''
+  document.getElementById('reset-records').style.visibility = 'hidden'
 }
 
 //--- ADDITIONAL OPTIONS ---//
