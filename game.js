@@ -94,6 +94,8 @@ function getArray(firstNumber, lastNumber) {
 
 function generateGameField(howManyNumbers) {
   document.getElementById('game-field').innerHTML = ''
+  document.getElementById('records').innerHTML = ''
+  showRecord()
   let arr = getArray(1, howManyNumbers)
   let i = howManyNumbers
   let randomNum
@@ -151,10 +153,12 @@ let gtm = 0
 
 function startGameTimer() {
   gameTime = setInterval(() => {
-    gtm += 1000
+    gtm += 100
     document.getElementById('timer-span').innerHTML = gtm / 1000
-  }, 1000)
+  }, 100)
 }
+
+//--- CLICK ON NUMBER ---//
 
 let nextDivID
 
@@ -188,17 +192,29 @@ function clickOnNumber(number) {
 // show the next number as a hint
 function showHint() {
   if (nextDivID === undefined) {
+    document.getElementById('1n').style.animation = ''
     document.getElementById('1n').classList.add('pop')
-    const deleteClass = setTimeout(
-      () => document.getElementById('1n').classList.remove('pop'),
-      2000
-    )
+    const deleteClass = setTimeout(() => {
+      document.getElementById('1n').classList.remove('pop')
+      document.getElementById(
+        '1n'
+      ).style.animation = `shakeNoRotate 1s infinite`
+      document
+        .getElementById('1n')
+        .style.setProperty('--rotation', `rotate(15deg)`)
+    }, 1000)
   } else {
+    document.getElementById(nextDivID).style.animation = ''
     document.getElementById(nextDivID).classList.add('pop')
-    const deleteClass = setTimeout(
-      () => document.getElementById(nextDivID).classList.remove('pop'),
-      2000
-    )
+    const deleteClass = setTimeout(() => {
+      document.getElementById(nextDivID).classList.remove('pop')
+      document.getElementById(
+        nextDivID
+      ).style.animation = `shakeNoRotate 1s infinite`
+      document
+        .getElementById(nextDivID)
+        .style.setProperty('--rotation', `rotate(15deg)`)
+    }, 1000)
     gtm += 5000 // add 5 sec to a timer when use hint
   }
 }
@@ -223,11 +239,18 @@ function recordTheBest(finishTimeSec) {
       )
       document.getElementById('new-record').innerHTML = 'It is a new record!'
     }
+  } else if (!oldRecord) {
+    localStorage.setItem(
+      `bestRecordfor${howManyNumbers}`,
+      JSON.stringify(newResult)
+    )
+    document.getElementById('new-record').innerHTML = 'It is a new record!'
   } else {
     localStorage.setItem(
       `bestRecordfor${howManyNumbers}`,
       JSON.stringify(newResult)
     )
+    document.getElementById('new-record').innerHTML = ''
   }
 }
 
@@ -240,22 +263,21 @@ function showRecord() {
   if (oldRecord) {
     let result = `Best time for ${howManyNumbers} is ${oldRecord.timeInSeconds}`
     document.getElementById('records').innerHTML = result
+    document.getElementById('reset-records').visibility = 'visible'
+  } else {
+    document.getElementById('reset-records').visibility = 'hidden'
   }
 }
 
 showRecord()
 
-//reset the best results
-// document.getElementById('reset-best').onclick = () => {
-//   localStorage.setItem('seconds', 0)
-//   localStorage.setItem('how-many-numbers', 0)
-//   document.getElementById('best-time').innerHTML =
-//     'Your best time for ' +
-//     localStorage.getItem('how-many-numbers') +
-//     'is ' +
-//     localStorage.getItem('seconds') +
-//     'seconds'
-// }
+//document.getElementById('reset-records').visibility = 'hidden'
+document.getElementById('reset-records').onclick = resetRecords
+
+function resetRecords() {
+  localStorage.clear()
+  document.getElementById('records').innerHTML = ''
+}
 
 //--- ADDITIONAL OPTIONS ---//
 
@@ -331,8 +353,6 @@ function startOver() {
   showRecord()
 }
 
-// new game after win
-
 //--- WIN ---//
 
 function handleClick(event) {
@@ -346,6 +366,7 @@ function showWin(finishTimeSec) {
   document.getElementById('win-window').style.visibility = 'visible'
   document.getElementById('win-window').style.animation = 'winPopUp 1s'
   document.getElementById('win-seconds').innerHTML = finishTimeSec
+  document.getElementById('new-record').innerHTML = ''
   document.getElementById('win-start-over').onclick = startOver
   document.addEventListener('click', handleClick)
 }
