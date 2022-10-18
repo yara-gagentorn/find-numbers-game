@@ -71,9 +71,7 @@ body{
 
 @keyframes hint {
   0% { transform: scale(1) }
- 
   50% { transform: scale(2) }
-  
   100% { transform: scale(1)}
 }
 
@@ -92,29 +90,19 @@ body{
 }
 
 @keyframes winPopUp {
-    0%{
-      transform: scale(0.3);
-    }
-    50%{
-      transform: scale(1.4);
-    }
-    100%{
-      transform: scale(1);
-    }
+  0%{transform: scale(0.3);}
+  50%{transform: scale(1.4);}
+  100%{transform: scale(1);}
 }
 
 @media screen and (max-width: 531px) {
-
-
-
   #container { display: flex; flex-flow: column; }
   #rules { order: 2; }
-  #game-field { order: 1; 
+  #game-field { 
+    order: 1; 
     width: 90vw;
     height: auto; 
-  padding-top: 0px;
-padding-bottom: 1rem;}
+    padding-top: 0px;
+    padding-bottom: 1rem;}
   #info { order: 3; }
-  .two { order: 4; }
-  .one { order: 5 }
 }
